@@ -7,8 +7,7 @@ import sys
 import prototip as p
 
 TOHUMLAR = range(1, 11)
-N_FUZZ = int(sys.argv[1]) if len(sys.argv) > 1 else 2000
-N_NI = int(sys.argv[2]) if len(sys.argv) > 2 else 1000
+N_FUZZ, N_NI = 2000, 1000
 
 
 def olc(mode):
@@ -37,6 +36,10 @@ def olc(mode):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        N_FUZZ = int(sys.argv[1])
+    if len(sys.argv) > 2:
+        N_NI = int(sys.argv[2])
     print(f"{len(TOHUMLAR)} tohum × {N_FUZZ} rastgele saldırı + {N_NI} girişimsizlik çifti\n")
     print(f"{'Sistem':24s} {'İhlalli vaka':>22s} {'Girişimsizlik ihlali':>24s}")
     for m in p.MODES:
