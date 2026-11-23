@@ -1,0 +1,10 @@
+10 tohum × 2000 rastgele saldırı + 1000 girişimsizlik çifti
+
+Sistem                             İhlalli vaka     Girişimsizlik ihlali
+Savunmasız                   8446 / 20000  (42.2%)     4859 / 10000  (48.6%)
+Bireysel CaMeL               5611 / 20000  (28.1%)     2224 / 10000  (22.2%)
+Multi-CaMeL                  6942 / 20000  (34.7%)      949 / 10000  ( 9.5%)
+Multi-CaMeL+Politika         1953 / 20000  ( 9.8%)      949 / 10000  ( 9.5%)
+Bizim (dinamik pc)              0 / 20000  ( 0.0%)      693 / 10000  ( 6.9%)
+Bizim (yükseltmesiz)            0 / 20000  ( 0.0%)        0 / 10000  ( 0.0%)
+Bizim                           0 / 20000  ( 0.0%)        0 / 10000  ( 0.0%)

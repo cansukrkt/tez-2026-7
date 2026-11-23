@@ -1,0 +1,28 @@
+Mutasyon testi: 13/13 mutant öldürüldü
+
+  ÖLDÜRÜLDÜ  Güvenilmez karara bağlı eylem kontrolü kaldırıldı
+             yakalayan: S4, S7, S8, Z1
+  ÖLDÜRÜLDÜ  Ödemede kayıtlı alıcı kontrolü kaldırıldı
+             yakalayan: S2, rastgele/S2, rastgele/Z7
+  ÖLDÜRÜLDÜ  Dışarıdan gelen tutar sınırı kaldırıldı
+             yakalayan: Z7
+  ÖLDÜRÜLDÜ  Gizli verinin dışarı gitme kontrolü kaldırıldı
+             yakalayan: Z8, rastgele/Z8
+  ÖLDÜRÜLDÜ  E-postada dışarıdan gelen alıcı kontrolü kaldırıldı
+             yakalayan: Z6
+  ÖLDÜRÜLDÜ  Orta/yüksek riskli araçta genel argüman kontrolü kaldırıldı
+             yakalayan: Z9
+  ÖLDÜRÜLDÜ  Sabit üst tavan (ödeme/silme yükseltilemez) kaldırıldı
+             yakalayan: S7, rastgele/S7
+  ÖLDÜRÜLDÜ  Yükseltmenin kaynak kontrolü kaldırıldı
+             yakalayan: Z4
+  ÖLDÜRÜLDÜ  Çevirmen modelin çıktısı etiket taşımıyor
+             yakalayan: S2, S4, S7, S8
+  ÖLDÜRÜLDÜ  Talimat/veri kanalı ayrımı kaldırıldı
+             yakalayan: S1, S2, S5, girişimsizlik/S1
+  ÖLDÜRÜLDÜ  pc ajan sınırında sıfırlanıyor
+             yakalayan: S4, S7, S8, Z1
+  ÖLDÜRÜLDÜ  Statik dal analizi kaldırıldı
+             yakalayan: S8, Z1, Z2, girişimsizlik/S8
+  ÖLDÜRÜLDÜ  Yetki daraltma kaldırıldı
+             yakalayan: Z5, rastgele/Z5
