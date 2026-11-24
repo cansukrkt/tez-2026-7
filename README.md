@@ -3,7 +3,8 @@
 Bu depo, "Privilege Separation for Multi-Agent LLM Systems" yüksek lisans tezi için
 hazırlanan mimarinin **güvenlik mantığını** test eden bir prototiptir.
 
-> **Önemli:** Bu, değerlendirmenin 1. aşamasıdır. Hiçbir gerçek LLM çağrılmaz.
+> **Önemli:** `prototip.py` değerlendirmenin 1. aşamasıdır ve hiçbir gerçek LLM çağırmaz.
+> Gerçek LLM ile küçük deneme için aşağıdaki "Aşama 2" bölümüne bak.
 > LLM'lerin davranışı en kötü durum varsayımlarıyla taklit edilir. Sonuçlar **güvenlik
 > mantığı** hakkında bilgi verir; gerçek görevlerdeki **fayda kaybı** hakkında bilgi vermez.
 
@@ -53,6 +54,61 @@ python mutasyon.py      # mutasyon testi
 python buyuk_test.py    # büyük ölçekli rastgele test (10 tohum)
 ```
 
+## Aşama 2: Gerçek LLM ile küçük deneme
+
+`llm_deney.py`, orkestratörün plancısını ve karantinadaki çevirmen modeli gerçek bir LLM'e bağlar.
+Hub, etiketler, pc, statik dal analizi, politikalar, yetki daraltma ve yükseltme `prototip.py`'deki
+kodun aynısıdır. Alt ajanların patronları hâlâ sabit planları kullanır (plancı mesajı katalogdan
+birebir seçmek zorunda); onları da LLM'e bağlamak sonraki adımdır.
+
+Plancı hiçbir dış içerik görmediği için aynı plan meşru ve saldırı ortamında, ve beş sistem modunda
+(Multi-CaMeL, Multi-CaMeL+Politika, Bizim (dinamik pc), Bizim (yükseltmesiz), Bizim) aynen kullanılır.
+Modlar arasındaki fark yalnızca güvenlik mekanizmasından gelir. Plancı tek atış çalışır: geçersiz
+plan düzeltilmez, "geçersiz" olarak sayılır.
+
+**Ölçülenler:** geçerli plan oranı, meşru görevde tamam / onaya düştü / başarısız, saldırıda
+geçti / onaya düştü / durdu, ve her senaryo için LLM'siz prototipin sonucuyla karşılaştırma.
+
+### Yerel model (Ollama)
+
+1. https://ollama.com adresinden Ollama'yı kur.
+2. 8 GB VRAM için 7–8B, 4-bit bir model indir (ör. `ollama pull qwen2.5:7b`).
+3. Önce tek senaryoyla dene, sonra geceye bırak:
+
+```bash
+python llm_deney.py --backend ollama --model qwen2.5:7b --tekrar 1 --senaryo S1,S2
+python llm_deney.py --backend ollama --model qwen2.5:7b --tekrar 5
+```
+
+17 senaryo × 5 tekrar = 85 kayıt; her kayıt yaklaşık 3–6 LLM çağrısıdır. Süre ekran kartına ve
+modele bağlıdır; ilerleme satırı kalan süreyi tahmin eder. Sonuçlar
+`sonuclar_llm/<model>.jsonl` dosyasına **her kayıttan sonra** yazılır; program durursa aynı
+komut kaldığı yerden devam eder. Bilgisayarın uyku moduna geçmemesi gerekir (ekran kilidi sorun değil).
+
+### API (OpenAI uyumlu)
+
+```bash
+export LLM_API_KEY=...          # Windows PowerShell: $env:LLM_API_KEY="..."
+python llm_deney.py --backend openai --model <model-adı> --tekrar 5
+python llm_deney.py --backend openai --base-url <sağlayıcının /v1 adresi> --model <model-adı>
+```
+
+Bazı akıl yürütme modelleri `temperature` kabul etmez; hata alırsan kodda `temperature=None` yap.
+
+### Diğer
+
+```bash
+python llm_deney.py --backend sahte --tekrar 1    # LLM'siz boru hattı testi (prototiple aynı sonucu vermeli)
+python llm_deney.py --ozet sonuclar_llm/qwen2.5_7b.jsonl
+```
+
+JSONL kayıtlarında ham plan, doğrulama hataları, çevirmen girdileri/çıktıları ve her moddaki
+engelleme gerekçeleri bulunur; tek tek inceleyebilirsin.
+
+**Yorum uyarısı:** Küçük yerel modelle çıkan sonuçlar düzeneği sınamak içindir. Geçersiz planlar
+büyük olasılıkla modelin zayıflığından kaynaklanır, mimariden değil. Tez için fayda sayıları
+güçlü bir modelle (API) ve ideal olarak AgentDojo uyarlamasıyla alınmalıdır.
+
 ## Dosyalar
 
 | Dosya | İçerik |
@@ -60,6 +116,8 @@ python buyuk_test.py    # büyük ölçekli rastgele test (10 tohum)
 | `prototip.py` | Etiketler, araçlar, politikalar, hub, yorumlayıcı, senaryolar, rastgele ve girişimsizlik testleri, hasar yarıçapı |
 | `mutasyon.py` | Güvenlik kurallarını tek tek bozup testlerin yakalayıp yakalamadığını kontrol eder |
 | `buyuk_test.py` | 10 tohumla büyük ölçekli rastgele test |
+| `llm_istemci.py` | Ollama ve OpenAI uyumlu API istemcisi (sadece standart kütüphane) |
+| `llm_deney.py` | Gerçek LLM ile deney: plancı istemi, katalog, plan doğrulama, çalıştırma, özet |
 | `tests/` | pytest testleri (birim, senaryo matrisi, rastgele, mutasyon) |
 | `sonuclar.txt`, `mutasyon_sonuclari.txt`, `buyuk_sonuclar.txt` | Son çalıştırmanın çıktıları |
 
