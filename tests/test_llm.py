@@ -117,3 +117,17 @@ def test_istemci_uctan_uca(sunucu, backend, yol):
     assert k["sonuclar"]["Bizim"]["saldiri"] == "onay"
     assert k["sonuclar"]["Multi-CaMeL"]["saldiri"] == "gecti"
     assert k["llm"]["cagri"] == 3          # 1 plancı + meşru ve saldırı için birer çevirmen (önbellekli)
+
+
+def test_ham_metin_dogrudan_verilemez():
+    oku = {"op": "call", "to": "eposta", "msg": "Verilen kişiden gelen e-postayı oku.",
+           "vars": {"kimden": {"lit": "acme"}}, "out": "e"}
+    _, _, h = d.dogrula([oku, {"op": "call", "to": "finans", "msg": "Verilen alıcıya verilen tutarı öde.",
+                               "vars": {"alici": {"var": "e", "path": ["iban"]}, "tutar": {"var": "e"}}}], KAT)
+    assert any("path" in x for x in h) and any("doğrudan" in x for x in h)
+
+
+def test_sabit_degisken_olarak_yazilirsa_reddedilir():
+    _, _, h = d.dogrula([{"op": "call", "to": "eposta", "msg": "Verilen içeriği verilen alıcıya gönder.",
+                          "vars": {"alici": {"var": "ali@sirket.com"}, "icerik": {"lit": "x"}}}], KAT)
+    assert any("tanımsız" in x for x in h)

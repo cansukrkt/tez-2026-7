@@ -100,6 +100,7 @@ Bazı akıl yürütme modelleri `temperature` kabul etmez; hata alırsan kodda `
 ```bash
 python llm_deney.py --backend sahte --tekrar 1    # LLM'siz boru hattı testi (prototiple aynı sonucu vermeli)
 python llm_deney.py --ozet sonuclar_llm/qwen2.5_7b.jsonl
+python llm_deney.py --planlar sonuclar_llm/qwen2.5_7b.jsonl --senaryo S1   # ham planlar, hatalar, engeller
 ```
 
 JSONL kayıtlarında ham plan, doğrulama hataları, çevirmen girdileri/çıktıları ve her moddaki
